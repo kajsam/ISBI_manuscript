@@ -1,0 +1,205 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{amsmath}                                                                                     % for equation*
+\usepackage{graphicx}                                                                     %\includegraphics
+\usepackage{multirow}
+\usepackage[square,comma]{natbib}
+\usepackage{subfigure}
+\usepackage{color}                                                                                             % useful in editing process
+\usepackage{floatrow}                                                                                       % table captions on top
+\usepackage{enumitem}                                                                                     % for the square bracket enumeration
+\usepackage{authblk}
+\usepackage{setspace}                                                                                      %  \doublespacing
+\usepackage[top=1.0in, bottom=1.0in, left=1.0in, right=1.0in]{geometry} % controlling the margins
+
+\doublespacing
+
+
+\bibliographystyle{ieeetr} 
+
+\floatsetup[table]{capposition=top}
+
+
+\begin{document}
+
+\author[1,*]{\footnotesize K. M{\o}llersen} 
+\author[2]{M. Zortea}
+\author[3]{T. R. Schopf}
+\author[4]{H. Kirchesch}
+\author[2]{F. Godtliebsen}
+
+\affil[1]{ Department of Community Medicine, UiT The Arctic University of Norway, Troms{\o}, Norway}
+\affil[2]{Department of Mathematics and Statistics, UiT The Arctic University of Norway, Troms{\o}, Norway}
+\affil[3]{Norwegian Centre for E-health Research, University Hospital of North Norway, Troms{\o}, Norway}
+\affil[4]{Private office, Venloer Stra{\ss}e 107, 50259 Pulheim, Germany}
+\affil[*]{P.O. Box 6050 Langnes, 9037 Troms{\o}, Norway, Telephone: +47 97 78 39 40, E-mail: kajsa.mollersen@uit.no}
+
+
+
+\title{Participation in an open challenge for melanoma detection in dermoscopic images \\
+- Results and Discussion - }
+\date{}
+
+\maketitle
+
+{\bf Keywords:} Melanoma detection; computer system; dermoscopy; image analysis; skin cancer; open challenge; decision support; performance measures
+
+\begin{abstract}
+\noindent {\bf Background:} Melanoma is the deadliest form of skin cancer, and early detection is crucial for patient survival. Computer systems can assist in melanoma detection, but are not widespread in clinical practice. In 2016, an open challenge in classification of dermoscopic images of skin lesions was announced.  \\ 
+{\bf Methods:} A training set of $900$ images with corresponding class labels was released. An independent test set of $379$ images, of which $75$ were of melanomas, was used to rank the participants according to average precision. Other measures of performance were also released after the challenge. Nevus Doctor, a computer system for melanoma detection previously developed by the authors, was used to participate in the challenge.  \\
+{\bf Results:} Nevus Doctor was ranked in the lower half among all participants according to the average precision measure. When ranking the participants according to high-sensitivity measures, Nevus Doctor was ranked among the upper half. \\ 
+{\bf Conclusion:} A challenge with a large data set and independent test set is a major contribution to research on computer systems for melanoma detection, but the clinical impact is limited. Future challenges should have more clinically relevant information about the data set, and more clinically oriented ranking criteria. 
+\end{abstract}
+
+\newpage
+
+\section{Introduction}
+
+Melanoma is the deadliest form of skin cancer. The survival rate drops as the level of tumour invasion increases, and therefore early detection is crucial for the patient's survival \citep{AmericanCancerSociety2016Cancer, CancerRegistryofNorway2016Cancer}. Melanoma detection relies on visual inspection, which is challenging because melanomas often resemble benign skin lesions. An aid in melanoma detection is the dermoscope, a simple device consisting of a magnifying lens and surrounding light, which is commonly used by dermatologists to examine skin conditions. The dermoscope reveals structures in lesions not visible to the naked eye, and has proven to increase diagnostic accuracy of skin lesions when used by trained personnel \citep{Kittler2002Diagnostic}.
+
+Computer systems for melanoma detection seek to correctly classify a lesion based on input and previous training. The input is typically a dermoscopic image, but other technologies such as multispectral imaging and Rahman spectroscopy are also used. See e.g., \cite{Fink2016Noninvasive} and \cite{Masood2013Computer} for an overview. Training relies on an available database of lesions and their diagnoses. 
+
+Research and development of computer systems for melanoma detection have increased in the past few decades, following the development of digital cameras and attachable dermoscopes. An overview can be found in \cite{Korotkov2012Computerized}. Despite the effort made in developing new systems, their use in clinical practice is not widespread. An explanation may be the lack of convincing reports on the systems' diagnostic accuracy, owing to small data sets and non-comparable results. 
+
+Small data sets result in training and testing on the same data, often by incorrect use of cross-validation. This gives overly optimistic estimates of the test error \citep{Smialowski2010Pitfalls,Hastie2009Elements}, and the classification accuracy of the system drops dramatically when tested on an independent test set. In the studies that report independent testing, the test set is often too small for the results to be generalised. Only two studies that we know of have more than $50$ melanomas in an independent test set \citep{Monheit2011Performance, Malvehy2014Clinical}. 
+
+The diagnostic difficulty of the data set has a significant impact on the reported diagnostic accuracy of the system, as discussed in \cite{Rosado2003Accuracy}, and illustrated in \cite{Malvehy2014Clinical} and \cite{Mollersen2015Computeraided}. Therefore, different systems cannot be compared unless they are tested on the same data set. 
+
+If a sufficiently large data set is made publicly available, both independent testing and comparisons between systems is possible. In 2013, the PH$^2$ data set was made publicly available \citep{Mendonca2013PH2}, and added important value to the research on computer systems for melanoma detection. Consisting of only $200$ images, it does not overcome the aforementioned obstacles of small data sets. A larger data set, the ISIC Data Archive (see Section~\ref{sec:Challenge}) is now publicly available. In 2016, an open challenge using images from the ISIC Data Archive was announced. Nevus Doctor, a computer system developed previously by the authors, was used to participate in this challenge.
+
+The rest of the article is organized as follows: a brief description of both the data set and the challenge is given in Section~\ref{sec:Challenge}. A description of Nevus Doctor and the modifications for the challenge is also given in this section. Section~\ref{sec:Results} presents the results of Nevus Doctor compared to the highest ranked participants. In Section~\ref{sec:Discussion}, a discussion on the different aspects of the challenge is provided. The section concludes with some suggestions for future work on Nevus Doctor and possible modifications for future challenges. 
+
+\section{The data set, the challenge, and the computer system} \label{sec:Challenge}
+
+The International Skin Image Collaboration (ISIC) (http://isdis.net/isic-project/) has created a public repository for dermoscopic skin lesion images (https://isic-archive.com/). The current dataset (12.01.2016) consists of $12,086$ images and is by far the largest data set of dermoscopic images available. Each image is annotated as `benign' or `malignant' according to histopathological diagnosis or expert consensus based on revision of the image. The images come from different sources, and hence are taken with different cameras and dermoscopes. 
+
+As part of the International Symposium on Biomedical Imaging 2016, the open challenge {\it Skin Lesion Analysis towards Melanoma Detection} was hosted by ISIC. The challenge consisted of three sub challenges: Segmentation, Feature Extraction, and Classification. Details can be found in \cite{Gutman2016Skin}. We participated in the Classification sub challenge, which had two parts: Automatic segmentation, where only the images were released, and Manual segmentation, where a semi-automatic or manually obtained mask was also released for each image in the test set. There were $25$ participants in the Automatic segmentation part, and $18$ participants in the Manual segmentation part. Many participated in both parts. 
+
+A set of $900$ dermoscopic images of skin lesions with corresponding class labels and masks was available for training. The test set consisted of $379$ images, of which $75$ were of melanomas. To participate in the challenge, a posterior probability of malignancy for each image in the test set had to be submitted. To calculate the performance of the different systems, the following definitions were used: TP = true positive, FP = false positive, TN = true negative, and FN = false negative, where 'malignant' is positive and 'benign' is negative. Precision = $TP/(TP+FP)$, recall = sensitivity (SE) = $TP/(TP+FN)$, and specificity = $TN/(TN+FP)$. Two global measures of performance were calculated: area under the precision-recall curve (average precision), and area under the curve of the receiver-operating characteristic (AUC of the ROC). In addition, specificity scores at sensitivities equal to $95\%$, $98\%$ and $99\%$ were calculated. We will refer to the latter ones as high-sensitivity measures. 
+
+Nevus Doctor is a computer system for detection of melanoma and non-melanocytic skin cancer in dermoscopic images. A detailed description can be found in \cite{Mollersen2015Improved} and \cite{Zortea2014Performance}. The system consists of automatic segmentation, feature extraction, and classification by a hybrid classifier. The images used to develop and train Nevus Doctor were taken with the same type of camera and dermoscope. This challenge offered a possibility to test Nevus Doctor on a more diverse data set. In addition, the impact of using automatic versus manual/semi-automatic segmentation on the classification outcome was investigated. 
+
+For participation in the challenge, semi-automatic feature selection was conducted on the basis of the $900$ training images, following the procedure described in \cite{Mollersen2015Improved}. Apart from the $59$ features listed in \cite{Mollersen2015Improved}, three new features, described in \cite{Mollersen2015Divergencebased}, were added to the feature pool. Nevus Doctor's hybrid classifier does not give a posterior probability for all images as required by the challenge, so we selected a new classifier. Two classifiers were considered: linear discriminant analysis (LDA) and quadratic discriminant analysis (QDA). The feature and classifier selection resulted in $16$ features and the QDA classifier. Description of each feature can be found in \cite{Mollersen2015Improved} and in \cite{Zortea2014Performance} (feature f1, f5, f6, f10, f11, f12, f16, f17, f18, f54, f55, f56, f57, and f58), and in  \cite{Mollersen2015Divergencebased} (feature f60 and f62).
+
+To provide a posterior probability for each lesion, the prior probability in a discriminant analysis classifier is fixed. We have recalculated the high-sensitivity measures by adjusting the prior probability to avoid the situation where several lesions have the saturated posterior probability of $1.00$. 
+
+\section{Results} \label{sec:Results}
+
+The challenge's ranking criterion was average precision. Nevus Doctor's average precision rank, as well as the rankings according to the four other measures, can be seen in Table~\ref{tab:Rankings}. The score of the highest ranked participant for each measure is shown in parentheses.
+
+Average precision and AUC of the ROC are global performance measures, from $0\%$ sensitivity (no melanomas detected), to $100\%$ sensitivity (all melanomas detected). The high-sensitivity measures provide a performance measures given that a high proportion of the melanomas are detected.
+
+%\begin{table}[h!]
+%\begin{tabular}{c | c | c | c | c}
+%        Segmentation: & \multicolumn{2}{c |}{Automatic, 25 participants} & \multicolumn{2}{c}{Manual, 18 participants} \\
+%        \hline
+%        & Ranking & Score & Ranking & Score \\
+%        \hline
+%  Average precision & 19 & 0.35  (0.64) & 13 & 0.37 (0.62) \\
+%  AUC of the ROC & 20 & 0.64 (0.83) & 14 & 0.67 (0.81) \\
+%  SE = 95\% & 10 & 0.23 (0.39) & 6 & 0.19 (0.32)\\
+%  SE = 98\% & 11 & 0.13 (0.33) & 3 & 0.17 (0.29) \\
+%  SE = 99\% & 7 & 0.12 (0.25) & 2 & 0.17 (0.25)
+%\end{tabular}
+%  \caption{Rankings and scores for Nevus Doctor. Highest ranked participant's score in parentheses.}
+%  \label{tab:Rankings}
+%\end{table}
+
+Figure~\ref{fig:ROC} shows the ROC curves for automatic and semi-automatic/manual segmentation, and we see that there is little difference between the two. 
+  \begin{figure}[h!]
+     \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_ROC_qda.jpg}
+      \caption{ROC curves for skin lesion classification with automatic and semi-automatic/manual segmentation.}
+       \label{fig:ROC}
+   \end{figure}
+ 
+\section{Discussion} \label{sec:Discussion} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+From Table~\ref{tab:Rankings}, we see that for the two global measures, Nevus Doctor is ranked in the lower half, but for the high-sensitivity measures, Nevus Doctor is among the upper half, and achieves its best ranking for $99\%$ sensitivity. This may be because Nevus Doctor was originally developed with the aim of high sensitivity. 
+
+In Figure~\ref{fig:ROC} we see that the specificity and sensitivity scores only differ slightly between automatic and manual/semi-automatic segmentation. Switching from automatic to manual/semi-automatic segmentation might improve the actual segmentation, but it did not affect the classification accuracy. Segmentation is rarely an aim in itself but is simply a step in the process of melanoma detection. 
+
+When training for the challenge, LDA and QDA classifiers were considered, and QDA was used on the test set. Because of the complexity of QDA, there is a risk of overfitting, and we therefore investigated the LDA classifier's accuracy on the test set after the challenge. Additionally, we investigated the diagonal LDA and QDA (dLDA and dQDA) classifiers, which correspond to naive Bayes classifiers. The features were not reselected, and therefore, QDA has a slight benefit. The results are shown in Table~\ref{tab:Diagonal}, with the best score among all participants for comparison,  and confirm what we saw in the training phase: that QDA gives better performance than LDA and is probably not overfitted. The naive Bayes classifiers have better performance than their more complex counterparts. For manual segmentation, Nevus Doctor with dQDA classifier performs as well as the best participant. 
+%\begin{table}
+%\begin{tabular}{c | c | c | c | c | c || c | c }
+%        \multicolumn{1}{c}{Segmentation}: & \multicolumn{5}{c }{  Automatic}& \multicolumn{2}{c }{Manual} \\
+%        \hline
+%        & LDA & QDA & dLDA & dQDA & Best & dQDA & Best \\
+%        \hline
+%   SE = 95\% & 0.14 & 0.23 & 0.28 &0.32 &0.39 & 0.32 & 0.32\\
+%  SE = 98\% & 0.07 & 0.13 & 0.22 & 0.27 & 0.33 & 0.29 & 0.29\\
+%  SE = 99\% & 0.05 & 0.12 & 0.21 & 0.24 & 0.25 & 0.27 & 0.25
+%\end{tabular}
+%  \caption{High-sensitivity measures for Nevus Doctor using different classifiers, compared to the best score among all participants.}
+%  \label{tab:Diagonal}
+%\end{table}
+ 
+A computer system for melanoma detection can only provide decision support, not actual diagnosis, as long as not all of the images are correctly classified. The usefulness of a system relies not only on its ability for correct classification but also on the possibility for the user to take advantage of the output. The less complex the system, the easier it is for a user to interpret its output. The naive Bayes classifiers are considerably easier to interpret, which is a benefit in clinical practice.
+
+
+%See e.g. \citet{Dreiseitl2009Computer}; or compare \citet{Elbaum2001Automatic} to \citet{Monheit2011Performance}; \citet{Bauer2000Digital} to \citet{Piccolo2002Dermoscopic}; \citet{Hoffmann2003Diagnostic} to \citet{Barzegari2005Computeraided} and \citet{Boldrick2007Evaluation}; and \citet{Blum2004Value} to \citet{Fruhauf2012Patient} and \citet{FueyoCasado2009Evaluation}. These are studies that report sensitivity and specificity scores first by training and testing on the same data, and later on independent test sets. 
+
+An open challenge provides benefits for melanoma detection research but also has its limitations. The data set used in this challenge consists of images taken with different cameras and dermoscopes and from different sources. This  introduces some obstacles because the size and colour of a lesion have diagnostic importance. Different image resolutions, magnifications and distances to the skin result in the true size of the lesion differing from image to image, though this can be solved easily by providing information regarding pixels per mm. Additional aspects that pose a challenge are the different colour calibrations of the cameras and different light sources, as illustrated in  Fig.~\ref{fig:Colour}. 
+  \begin{figure}[h!]
+  \centering
+     \subfigure{\includegraphics[width = 0.32 \textwidth]{/Volumes/kam025/Documents/Figures/ISIC_0000023.jpg}}
+     \subfigure{\includegraphics[width = 0.32 \textwidth]{/Volumes/kam025/Documents/Figures/ISIC_0000037.jpg}}
+        \caption{Example of different colour calibration and/or different light source from the ISIC Data Archive.}
+        \label{fig:Colour}
+   \end{figure}
+Colour is one of the main clinical features for melanoma detection \citep{Argenziano2003Dermoscopy}, and computer systems normally have one or more colour features \citep{Korotkov2012Computerized}. There have been attempts at automatic colour calibration based on image content \citep{Iyatomi2011Automated}, but the impact on classification is not known. 
+
+Testing a system on images from different cameras and dermoscopes is perhaps more realistic than using images from identical equipment. The more specific the requirements of the input are, the less versatile the computer system will be, and probably it will be less used. Additionally, camera and dermoscope technologies are developing fast, and a system must have the ability to easily adapt to new equipment. A public repository cannot limit its providers to the use of one specific type of equipment, but information on camera model and type of dermoscope can add quality to the data set.   
+
+A major benefit of a challenge is that the diagnostic accuracy of different systems can be compared. The diagnostic difficulty of a data set depends on clinical aspects, such as proportion of melanomas in situ and median Breslow depth but also image resolution, colour calibration, etc. Very few studies have been conducted where several systems are tested on the same set of lesions, with the exception of \cite{Perrinaud2007Can} and \cite{Mollersen2015Computeraided}. 
+ 
+To compare different systems, a performance criterion must be decided upon. In this challenge, the systems were ranked according to average precision, which weights misclassifications equally whether it is a melanoma misclassified as benign, or a benign lesion misclassified as malignant. In two large clinical studies, the specificity at $97\%$ sensitivity \citep{Malvehy2014Clinical} and $98\%$ sensitivity \citep{Monheit2011Performance} was used as performance measures, arguing that a melanoma misclassified as benign can have fatal outcome for the patient. A problem with ranking by very high sensitivity is its dependence on the data set. In this challenge, $99\%$ sensitivity corresponds to misclassifying only one melanoma, and under such circumstances, the ranking can be somewhat arbitrary. To avoid this, cross-validation, bootstrapping or similar methods can be used.   
+
+The major drawback of the ISIC Data Archive is the lack of clinical information about each sub data set and each lesion. Of crucial importance are the inclusion and exclusion criteria for each sub data set (e.g. if non-melanoma skin cancers are excluded), and the Breslow thickness or the invasion level of the melanomas. Demanding more information can result in fewer deposits to the repository, but to have clinical impact, a minimum of clinical information is essential. See e.g., \citep{Malvehy2007Dermoscopy} for recommendations. 
+
+On the other hand, a large number of melanomas in the test set is crucial for the clinical relevance because the visual appearance of melanomas differs widely, and only a large data set can capture all the variety. With $75$ melanomas in the test set, this challenge has provided one of the largest independent test sets for computer systems for melanoma detection.  
+
+\subsection{Conclusion}
+
+Nevus Doctor showed good performance when ranked by the high-sensitivity measures, and the performance improved by using a less complex classifier, which are both important aspects in clinical settings. A new feature selection based on the diagonal QDA classifier may improve the performance, but this must be verified on an independent data set. 
+
+An open challenge is a good initiative to compare systems on the same independent data set. However, future challenges should be more clinically oriented for ISIC to achieve its goal, which is ``to help reduce melanoma mortality'' (http://isdis.net/isic-project/). Deciding on a new ranking criterion and switching from a global measure to a high-sensitivity measure can improve the clinical relevance of the challenge. The exact sensitivity score will be subject to discussion, even among dermatologists. A system with $95\%$ sensitivity misclassifies one in 20 melanomas, and it is difficult to imagine that lower sensitivity is acceptable. 
+
+To truly know whether a system can have clinical impact, it must be tested in a clinical setting, which is not feasible in an open challenge. However, an open challenge together with a large, publicly available data set, adds important value to research on melanoma detection.
+
+\bibliography{/Users/kam025/kajsam}
+
+\begin{table}[h!]
+\begin{tabular}{c | c | c | c | c}
+        Segmentation: & \multicolumn{2}{c |}{Automatic, 25 participants} & \multicolumn{2}{c}{Manual, 18 participants} \\
+        \hline
+        & Ranking & Score & Ranking & Score \\
+        \hline
+  Average precision & 19 & 0.35  (0.64) & 13 & 0.37 (0.62) \\
+  AUC of the ROC & 20 & 0.64 (0.83) & 14 & 0.67 (0.81) \\
+  SE = 95\% & 10 & 0.23 (0.39) & 6 & 0.19 (0.32)\\
+  SE = 98\% & 11 & 0.13 (0.33) & 3 & 0.17 (0.29) \\
+  SE = 99\% & 7 & 0.12 (0.25) & 2 & 0.17 (0.25)
+\end{tabular}
+  \caption{Rankings and scores for Nevus Doctor. Highest ranked participant's score in parentheses.}
+  \label{tab:Rankings}
+\end{table}
+
+\begin{table}
+\begin{tabular}{c | c | c | c | c | c || c | c }
+        \multicolumn{1}{c}{Segmentation}: & \multicolumn{5}{c }{  Automatic}& \multicolumn{2}{c }{Manual} \\
+        \hline
+        & LDA & QDA & dLDA & dQDA & Best & dQDA & Best \\
+        \hline
+   SE = 95\% & 0.14 & 0.23 & 0.28 &0.32 &0.39 & 0.32 & 0.32\\
+  SE = 98\% & 0.07 & 0.13 & 0.22 & 0.27 & 0.33 & 0.29 & 0.29\\
+  SE = 99\% & 0.05 & 0.12 & 0.21 & 0.24 & 0.25 & 0.27 & 0.25
+\end{tabular}
+  \caption{High-sensitivity measures for Nevus Doctor using different classifiers, compared to the best score among all participants.}
+  \label{tab:Diagonal}
+\end{table}
+
+
+
+
+\end{document}
+
