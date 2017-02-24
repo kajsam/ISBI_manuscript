@@ -15,7 +15,7 @@
 \doublespacing
 
 
-\bibliographystyle{ieeetr} 
+\bibliographystyle{plos2015} 
 
 \floatsetup[table]{capposition=top}
 
@@ -36,8 +36,7 @@
 
 
 
-\title{Participation in an open challenge for melanoma detection in dermoscopic images \\
-- Results and Discussion - }
+\title{Comparison of algorithms and ranking criteria for automatic melanoma detection in dermoscopic images}
 \date{}
 
 \maketitle
@@ -85,60 +84,123 @@ To provide a posterior probability for each lesion, the prior probability in a d
 
 \section{Results} \label{sec:Results}
 
-The challenge's ranking criterion was average precision. Nevus Doctor's average precision rank, as well as the rankings according to the four other measures, can be seen in Table~\ref{tab:Rankings}. The score of the highest ranked participant for each measure is shown in parentheses.
+The challenge's ranking criterion was average precision, but scores for the other performance measures were provided as well.  
+% Nevus Doctor's average precision rank, as well as the rankings according to the four other measures, can be seen in Table~\ref{tab:Rankings}. The score of the highest ranked participant for each measure is shown in parentheses.
+Average precision and AUC of the ROC are global performance measures, from $0\%$ sensitivity (no melanomas detected), to $100\%$ sensitivity (all melanomas detected). The high-sensitivity measures provide a performance measures given that a high proportion of the melanomas are detected. 
 
-Average precision and AUC of the ROC are global performance measures, from $0\%$ sensitivity (no melanomas detected), to $100\%$ sensitivity (all melanomas detected). The high-sensitivity measures provide a performance measures given that a high proportion of the melanomas are detected.
+For those participants that were ranked highest by one of the measures, Table~\ref{tab:Rankings} shows the rankings
+by the remaining measures. The score is given for the highest ranked participants. Description of the algorithms were not submitted for the challenge, and therefore the participants are only given a letter as identifier in the table. Participants B and D did not participate in the Manual segmentation part. 
 
-%\begin{table}[h!]
-%\begin{tabular}{c | c | c | c | c}
-%        Segmentation: & \multicolumn{2}{c |}{Automatic, 25 participants} & \multicolumn{2}{c}{Manual, 18 participants} \\
-%        \hline
-%        & Ranking & Score & Ranking & Score \\
-%        \hline
-%  Average precision & 19 & 0.35  (0.64) & 13 & 0.37 (0.62) \\
-%  AUC of the ROC & 20 & 0.64 (0.83) & 14 & 0.67 (0.81) \\
-%  SE = 95\% & 10 & 0.23 (0.39) & 6 & 0.19 (0.32)\\
-%  SE = 98\% & 11 & 0.13 (0.33) & 3 & 0.17 (0.29) \\
-%  SE = 99\% & 7 & 0.12 (0.25) & 2 & 0.17 (0.25)
-%\end{tabular}
-%  \caption{Rankings and scores for Nevus Doctor. Highest ranked participant's score in parentheses.}
-%  \label{tab:Rankings}
-%\end{table}
+\begin{table}[h!]
+\begin{tabular}{c | c | c | c | c | c | c| c || c | c | c | c | c}
+        Segmentation & \multicolumn{7}{c ||}{Automatic} & \multicolumn{5}{c}{Manual} \\
+        \hline
+        Participant & A & B & C & C & D & E & F & A & E & C & E & F \\
+        \hline 
+   Av. precision 	&  0.64 &  3 & 11 & 11 & 2 & 6 & 8 & 0.62 & 3 & 7 & 3 & 2   \\
+  AUC of ROC   	&  3 &  0.83 &  6  &  6 &  4 & 8 & 5 & 4 &  0.81 & 5 & 1 & 2 \\
+  SE = 95\%            	& 11 &  8 &  0.39 & 1  & 6  & 13 & 7 &  11 & 2 & 0.32 & 2 & 3 \\
+  SE = 98\% 		& 15 & 14 & 1 &  0.33 & 4 & 13 & 5 & 11 & 1 & 5 & 0.29 & 2 \\
+  SE = 99\% 		& 11 &   9 &  3 &  3 &  0.25 & 12 & 10 & 8 & 7 & 2 & 7  & 0.25 
+\end{tabular}
+  \caption{Rankings for those participants that were highest ranked by one measure.}
+  \label{tab:Rankings}
+\end{table}
 
-Figure~\ref{fig:ROC} shows the ROC curves for automatic and semi-automatic/manual segmentation, and we see that there is little difference between the two. 
+From Table~\ref{tab:Rankings}, it is clear that the use of performance measure has strong impact on the resulting ranking.  
+
+\subsection{The impact of segmentation}
+
+From Table~\ref{tab:Rankings} we see that the ranking also changes when the participants use their own segmentation algorithm or the semi-automatic/manual segmentation provided by the challenge. Interestingly, we also see that the best score for each measure does not improve semi-automatic/manual segmentation. 
+
+Figure~\ref{fig:Border} shows an example of the automatic segmentation used in Nevus Doctor and the manual segmentation provided by the challenge. In general, when the difference between the automatic and semi-automatic/manual segmentation was large, the automatic segmentation missed outer lighter areas of the lesion, like in Figure~\ref{fig:Border}. 
+\begin{figure}[h!]
+     \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISIC_0000276_border.jpeg}
+      \caption{Blue line: automatic segmentation. Red line: manual segmentation.}
+       \label{fig:Border}
+\end{figure}
+
+The occasionally failed segmentation does not seem to have impact on the classification result.
+Figure~\ref{fig:ROC} shows the ROC curves for automatic and semi-automatic/manual segmentation for Nevus Doctor. 
   \begin{figure}[h!]
      \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_ROC_qda.jpg}
       \caption{ROC curves for skin lesion classification with automatic and semi-automatic/manual segmentation.}
        \label{fig:ROC}
    \end{figure}
+The two curves follow each other closely for the whole range of sensitivities. 
+This is also confirmed by the results for the five performance measures.    
+
+\begin{table}[h!]
+\begin{tabular}{c | c | c | c | c}
+        Segmentation: &{Automatic} & {Manual} \\
+        \hline
+  Average precision & 0.35 (19) & 0.37 (13) \\
+  AUC of the ROC & 0.64 (20) & 0.67 (14) \\
+  SE = 95\% & 0.23 (10) & 0.19 (6) \\
+  SE = 98\%  & 0.13 (11) & 0.17 (3) \\
+  SE = 99\%  & 0.12 (7)  & 0.17 (2)
+\end{tabular}
+  \caption{Scores for Nevus Doctor (Ranking in parenthesis).}
+  \label{tab:ND_Rankings}
+\end{table}
+
+\subsection{The impact of classifier} 
+
+Because the segmentation algorithm had lesser impact than expected, we investigated a small set of classifiers. 
+
+When training for the challenge, LDA and QDA classifiers were considered, and QDA was used on the test set. %Because of the complexity of QDA, there is a risk of overfitting, and we therefore investigated the LDA classifier's accuracy on the test set after the challenge. Additionally, 
+we investigated the diagonal LDA and QDA (dLDA and dQDA) classifiers, which correspond to naive Bayes classifiers. The features were not reselected, and therefore, QDA has a slight benefit. The results are shown in Table~\ref{tab:Diagonal}, with the best score among all participants for comparison,  
+%and confirm what we saw in the training phase: that QDA gives better performance than LDA and is probably not overfitted. 
+The naive Bayes classifiers have better performance than their more complex counterparts. 
+%For manual segmentation, Nevus Doctor with dQDA classifier performs as well as the best participant. 
+\begin{table}
+\begin{tabular}{c | c | c | c | c}
+        \multicolumn{5}{c}{Automatic segmentation} \\
+        \hline
+        & LDA & QDA & dLDA & dQDA \\
+        \hline
+   SE = 95\% & 0.14 & 0.23 & 0.28 &0.32\\
+  SE = 98\% & 0.07 & 0.13 & 0.22 & 0.27 \\
+  SE = 99\% & 0.05 & 0.12 & 0.21 & 0.24 
+\end{tabular}
+  \caption{High-sensitivity measures for Nevus Doctor using different classifiers.}
+  \label{tab:Diagonal}
+\end{table}
+
+
  
 \section{Discussion} \label{sec:Discussion} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-From Table~\ref{tab:Rankings}, we see that for the two global measures, Nevus Doctor is ranked in the lower half, but for the high-sensitivity measures, Nevus Doctor is among the upper half, and achieves its best ranking for $99\%$ sensitivity. This may be because Nevus Doctor was originally developed with the aim of high sensitivity. 
+The ISIC data repository, consisting of more than $12,000$ dermoscopic images, has answered to a need expressed for several years in the field of computer aided melanoma detection: a publicly available data set. 
+The outcome of collecting and sharing data are \\
+(1) Large data sets allows for large training sets and independent test sets. (2) Publicly availability allows for comparison of algorithms on the same data. \\
+The ISBI challenge has taken advantage of this and ranked its participants according to their performance on the same independent test set. However, we see from Table~\ref{tab:Rankings} that the choice of performance measure has great impact on the resulting ranking. 
 
-In Figure~\ref{fig:ROC} we see that the specificity and sensitivity scores only differ slightly between automatic and manual/semi-automatic segmentation. Switching from automatic to manual/semi-automatic segmentation might improve the actual segmentation, but it did not affect the classification accuracy. Segmentation is rarely an aim in itself but is simply a step in the process of melanoma detection. 
+To compare different systems, a performance criterion must be decided upon. In this challenge, the systems were ranked according to average precision, which weights misclassifications equally whether it is a melanoma misclassified as benign, or a benign lesion misclassified as malignant. In two large clinical studies, the specificity at $97\%$ sensitivity \citep{Malvehy2014Clinical} and $98\%$ sensitivity \citep{Monheit2011Performance} was used as performance measures, arguing that a melanoma misclassified as benign can have fatal outcome for the patient. A problem with ranking by very high sensitivity is its dependence on the data set. In this challenge, $99\%$ sensitivity corresponds to misclassifying only one melanoma, and under such circumstances, the ranking can be somewhat arbitrary. To avoid this, cross-validation, bootstrapping or similar methods can be used.   
 
-When training for the challenge, LDA and QDA classifiers were considered, and QDA was used on the test set. Because of the complexity of QDA, there is a risk of overfitting, and we therefore investigated the LDA classifier's accuracy on the test set after the challenge. Additionally, we investigated the diagonal LDA and QDA (dLDA and dQDA) classifiers, which correspond to naive Bayes classifiers. The features were not reselected, and therefore, QDA has a slight benefit. The results are shown in Table~\ref{tab:Diagonal}, with the best score among all participants for comparison,  and confirm what we saw in the training phase: that QDA gives better performance than LDA and is probably not overfitted. The naive Bayes classifiers have better performance than their more complex counterparts. For manual segmentation, Nevus Doctor with dQDA classifier performs as well as the best participant. 
-%\begin{table}
-%\begin{tabular}{c | c | c | c | c | c || c | c }
-%        \multicolumn{1}{c}{Segmentation}: & \multicolumn{5}{c }{  Automatic}& \multicolumn{2}{c }{Manual} \\
-%        \hline
-%        & LDA & QDA & dLDA & dQDA & Best & dQDA & Best \\
-%        \hline
-%   SE = 95\% & 0.14 & 0.23 & 0.28 &0.32 &0.39 & 0.32 & 0.32\\
-%  SE = 98\% & 0.07 & 0.13 & 0.22 & 0.27 & 0.33 & 0.29 & 0.29\\
-%  SE = 99\% & 0.05 & 0.12 & 0.21 & 0.24 & 0.25 & 0.27 & 0.25
-%\end{tabular}
-%  \caption{High-sensitivity measures for Nevus Doctor using different classifiers, compared to the best score among all participants.}
-%  \label{tab:Diagonal}
-%\end{table}
+A major benefit of a challenge is that the diagnostic accuracy of different systems can be compared. The diagnostic difficulty of a data set depends on clinical aspects, such as proportion of melanomas in situ and median Breslow depth but also image resolution, colour calibration, etc. Very few studies have been conducted where several systems are tested on the same set of lesions, with the exception of \cite{Perrinaud2007Can} and \cite{Mollersen2015Computeraided}. 
+
+The major drawback of the ISIC Data Archive is the lack of clinical information about each sub data set and each lesion. Of crucial importance are the inclusion and exclusion criteria for each sub data set (e.g. if non-melanoma skin cancers are excluded), and the Breslow thickness or the invasion level of the melanomas. 
+Even though the performance in absolute numbers, e.g. specificity at $95\%$ sensitivity, are better for many of the algorithms in this challenge compared to published studies, one cannot draw the conclusion that these algorithms are in general better for that performance measure. 
+
+Demanding more information can result in fewer deposits to the repository, but to have clinical impact, a minimum of clinical information is essential. See e.g., \citep{Malvehy2007Dermoscopy} for recommendations. 
+
+%From Table~\ref{tab:Rankings}, we see that for the two global measures, Nevus Doctor is ranked in the lower half, but for the high-sensitivity measures, Nevus Doctor is among the upper half, and achieves its best ranking for $99\%$ sensitivity. This may be because Nevus Doctor was originally developed with the aim of high sensitivity. 
+%
+%In Figure~\ref{fig:ROC} we see that the specificity and sensitivity scores only differ slightly between automatic and manual/semi-automatic segmentation. Switching from automatic to manual/semi-automatic segmentation might improve the actual segmentation, but it did not affect the classification accuracy. Segmentation is rarely an aim in itself but is simply a step in the process of melanoma detection. 
+
  
-A computer system for melanoma detection can only provide decision support, not actual diagnosis, as long as not all of the images are correctly classified. The usefulness of a system relies not only on its ability for correct classification but also on the possibility for the user to take advantage of the output. The less complex the system, the easier it is for a user to interpret its output. The naive Bayes classifiers are considerably easier to interpret, which is a benefit in clinical practice.
+A computer system for melanoma detection can only provide decision support, not actual diagnosis, as long as not all of the images are correctly classified. The usefulness of a system relies not only on its ability for correct classification but also on the possibility for the user to take advantage of the output. The less complex the system, the easier it is for a user to interpret its output. 
+
+% The naive Bayes classifiers are considerably easier to interpret, which is a benefit in clinical practice.
 
 
 %See e.g. \citet{Dreiseitl2009Computer}; or compare \citet{Elbaum2001Automatic} to \citet{Monheit2011Performance}; \citet{Bauer2000Digital} to \citet{Piccolo2002Dermoscopic}; \citet{Hoffmann2003Diagnostic} to \citet{Barzegari2005Computeraided} and \citet{Boldrick2007Evaluation}; and \citet{Blum2004Value} to \citet{Fruhauf2012Patient} and \citet{FueyoCasado2009Evaluation}. These are studies that report sensitivity and specificity scores first by training and testing on the same data, and later on independent test sets. 
 
-An open challenge provides benefits for melanoma detection research but also has its limitations. The data set used in this challenge consists of images taken with different cameras and dermoscopes and from different sources. This  introduces some obstacles because the size and colour of a lesion have diagnostic importance. Different image resolutions, magnifications and distances to the skin result in the true size of the lesion differing from image to image, though this can be solved easily by providing information regarding pixels per mm. Additional aspects that pose a challenge are the different colour calibrations of the cameras and different light sources, as illustrated in  Fig.~\ref{fig:Colour}. 
+% An open challenge provides benefits for melanoma detection research but also has its limitations. 
+
+Another effect of public repository is variability in the data. 
+The data set used in this challenge consists of images taken with different cameras and dermoscopes and from different sources. This  introduces some obstacles because the size and colour of a lesion have diagnostic importance. Different image resolutions, magnifications and distances to the skin result in the true size of the lesion differing from image to image, though this can be solved easily by providing information regarding pixels per mm. Additional aspects that pose a challenge are the different colour calibrations of the cameras and different light sources, as illustrated in  Fig.~\ref{fig:Colour}. 
   \begin{figure}[h!]
   \centering
      \subfigure{\includegraphics[width = 0.32 \textwidth]{/Volumes/kam025/Documents/Figures/ISIC_0000023.jpg}}
@@ -150,17 +212,15 @@ Colour is one of the main clinical features for melanoma detection \citep{Argenz
 
 Testing a system on images from different cameras and dermoscopes is perhaps more realistic than using images from identical equipment. The more specific the requirements of the input are, the less versatile the computer system will be, and probably it will be less used. Additionally, camera and dermoscope technologies are developing fast, and a system must have the ability to easily adapt to new equipment. A public repository cannot limit its providers to the use of one specific type of equipment, but information on camera model and type of dermoscope can add quality to the data set.   
 
-A major benefit of a challenge is that the diagnostic accuracy of different systems can be compared. The diagnostic difficulty of a data set depends on clinical aspects, such as proportion of melanomas in situ and median Breslow depth but also image resolution, colour calibration, etc. Very few studies have been conducted where several systems are tested on the same set of lesions, with the exception of \cite{Perrinaud2007Can} and \cite{Mollersen2015Computeraided}. 
- 
-To compare different systems, a performance criterion must be decided upon. In this challenge, the systems were ranked according to average precision, which weights misclassifications equally whether it is a melanoma misclassified as benign, or a benign lesion misclassified as malignant. In two large clinical studies, the specificity at $97\%$ sensitivity \citep{Malvehy2014Clinical} and $98\%$ sensitivity \citep{Monheit2011Performance} was used as performance measures, arguing that a melanoma misclassified as benign can have fatal outcome for the patient. A problem with ranking by very high sensitivity is its dependence on the data set. In this challenge, $99\%$ sensitivity corresponds to misclassifying only one melanoma, and under such circumstances, the ranking can be somewhat arbitrary. To avoid this, cross-validation, bootstrapping or similar methods can be used.   
 
-The major drawback of the ISIC Data Archive is the lack of clinical information about each sub data set and each lesion. Of crucial importance are the inclusion and exclusion criteria for each sub data set (e.g. if non-melanoma skin cancers are excluded), and the Breslow thickness or the invasion level of the melanomas. Demanding more information can result in fewer deposits to the repository, but to have clinical impact, a minimum of clinical information is essential. See e.g., \citep{Malvehy2007Dermoscopy} for recommendations. 
 
-On the other hand, a large number of melanomas in the test set is crucial for the clinical relevance because the visual appearance of melanomas differs widely, and only a large data set can capture all the variety. With $75$ melanomas in the test set, this challenge has provided one of the largest independent test sets for computer systems for melanoma detection.  
+%On the other hand, a large number of melanomas in the test set is crucial for the clinical relevance because the visual appearance of melanomas differs widely, and only a large data set can capture all the variety. With $75$ melanomas in the test set, this challenge has provided one of the largest independent test sets for computer systems for melanoma detection.  
 
 \subsection{Conclusion}
 
-Nevus Doctor showed good performance when ranked by the high-sensitivity measures, and the performance improved by using a less complex classifier, which are both important aspects in clinical settings. A new feature selection based on the diagonal QDA classifier may improve the performance, but this must be verified on an independent data set. 
+%Nevus Doctor showed good performance when ranked by the high-sensitivity measures, and the performance improved by using a less complex classifier, which are both important aspects in clinical settings. A new feature selection based on the diagonal QDA classifier may improve the performance, but this must be verified on an independent data set. 
+
+The segmentation algorithm might have less impact on the final classification than expected. 
 
 An open challenge is a good initiative to compare systems on the same independent data set. However, future challenges should be more clinically oriented for ISIC to achieve its goal, which is ``to help reduce melanoma mortality'' (http://isdis.net/isic-project/). Deciding on a new ranking criterion and switching from a global measure to a high-sensitivity measure can improve the clinical relevance of the challenge. The exact sensitivity score will be subject to discussion, even among dermatologists. A system with $95\%$ sensitivity misclassifies one in 20 melanomas, and it is difficult to imagine that lower sensitivity is acceptable. 
 
@@ -168,35 +228,21 @@ To truly know whether a system can have clinical impact, it must be tested in a 
 
 \bibliography{/Users/kam025/kajsam}
 
-\begin{table}[h!]
-\begin{tabular}{c | c | c | c | c}
-        Segmentation: & \multicolumn{2}{c |}{Automatic, 25 participants} & \multicolumn{2}{c}{Manual, 18 participants} \\
-        \hline
-        & Ranking & Score & Ranking & Score \\
-        \hline
-  Average precision & 19 & 0.35  (0.64) & 13 & 0.37 (0.62) \\
-  AUC of the ROC & 20 & 0.64 (0.83) & 14 & 0.67 (0.81) \\
-  SE = 95\% & 10 & 0.23 (0.39) & 6 & 0.19 (0.32)\\
-  SE = 98\% & 11 & 0.13 (0.33) & 3 & 0.17 (0.29) \\
-  SE = 99\% & 7 & 0.12 (0.25) & 2 & 0.17 (0.25)
-\end{tabular}
-  \caption{Rankings and scores for Nevus Doctor. Highest ranked participant's score in parentheses.}
-  \label{tab:Rankings}
-\end{table}
 
-\begin{table}
-\begin{tabular}{c | c | c | c | c | c || c | c }
-        \multicolumn{1}{c}{Segmentation}: & \multicolumn{5}{c }{  Automatic}& \multicolumn{2}{c }{Manual} \\
-        \hline
-        & LDA & QDA & dLDA & dQDA & Best & dQDA & Best \\
-        \hline
-   SE = 95\% & 0.14 & 0.23 & 0.28 &0.32 &0.39 & 0.32 & 0.32\\
-  SE = 98\% & 0.07 & 0.13 & 0.22 & 0.27 & 0.33 & 0.29 & 0.29\\
-  SE = 99\% & 0.05 & 0.12 & 0.21 & 0.24 & 0.25 & 0.27 & 0.25
-\end{tabular}
-  \caption{High-sensitivity measures for Nevus Doctor using different classifiers, compared to the best score among all participants.}
-  \label{tab:Diagonal}
-\end{table}
+
+%\begin{table}
+%\begin{tabular}{c | c | c | c | c | c || c | c }
+%        \multicolumn{1}{c}{Segmentation}: & \multicolumn{5}{c }{  Automatic}& \multicolumn{2}{c }{Manual} \\
+%        \hline
+%        & LDA & QDA & dLDA & dQDA & Best & dQDA & Best \\
+%        \hline
+%   SE = 95\% & 0.14 & 0.23 & 0.28 &0.32 &0.39 & 0.32 & 0.32\\
+%  SE = 98\% & 0.07 & 0.13 & 0.22 & 0.27 & 0.33 & 0.29 & 0.29\\
+%  SE = 99\% & 0.05 & 0.12 & 0.21 & 0.24 & 0.25 & 0.27 & 0.25
+%\end{tabular}
+%  \caption{High-sensitivity measures for Nevus Doctor using different classifiers, compared to the best score among all participants.}
+%  \label{tab:ND_Diagonal}
+%\end{table}
 
 
 
