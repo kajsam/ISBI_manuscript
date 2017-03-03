@@ -44,10 +44,10 @@
 {\bf Keywords:} Melanoma detection; computer system; dermoscopy; image analysis; skin cancer; open challenge; decision support; performance measures
 
 \begin{abstract}
-\noindent {\bf Background:} Melanoma is the deadliest form of skin cancer, and early detection is crucial for patient survival. Computer systems can assist in melanoma detection, but are not widespread in clinical practice. In 2016, an open challenge in classification of dermoscopic images of skin lesions was announced.  \\ 
-{\bf Methods:} A training set of $900$ images with corresponding class labels was released. An independent test set of $379$ images, of which $75$ were of melanomas, was used to rank the participants according to average precision. Other measures of performance were also released after the challenge. Nevus Doctor, a computer system for melanoma detection previously developed by the authors, was used to participate in the challenge.  \\
-{\bf Results:} Nevus Doctor was ranked in the lower half among all participants according to the average precision measure. When ranking the participants according to high-sensitivity measures, Nevus Doctor was ranked among the upper half. \\ 
-{\bf Conclusion:} A challenge with a large data set and independent test set is a major contribution to research on computer systems for melanoma detection, but the clinical impact is limited. Future challenges should have more clinically relevant information about the data set, and more clinically oriented ranking criteria. 
+%\noindent {\bf Background:} Melanoma is the deadliest form of skin cancer, and early detection is crucial for patient survival. Computer systems can assist in melanoma detection, but are not widespread in clinical practice. In 2016, an open challenge in classification of dermoscopic images of skin lesions was announced.  \\ 
+%{\bf Methods:} A training set of $900$ images with corresponding class labels was released. An independent test set of $379$ images, of which $75$ were of melanomas, was used to rank the participants according to average precision. Other measures of performance were also released after the challenge. Nevus Doctor, a computer system for melanoma detection previously developed by the authors, was used to participate in the challenge.  \\
+%{\bf Results:} Nevus Doctor was ranked in the lower half among all participants according to the average precision measure. When ranking the participants according to high-sensitivity measures, Nevus Doctor was ranked among the upper half. \\ 
+%{\bf Conclusion:} A challenge with a large data set and independent test set is a major contribution to research on computer systems for melanoma detection, but the clinical impact is limited. Future challenges should have more clinically relevant information about the data set, and more clinically oriented ranking criteria. 
 \end{abstract}
 
 \newpage
@@ -61,12 +61,12 @@ The dermoscope reveals structures in lesions not visible to the naked eye, and h
 Computer systems for melanoma detection seek to correctly classify a lesion based on input and previous training. 
 The input is typically a dermoscopic image, but other technologies such as multispectral imaging and Rahman spectroscopy are also used. 
 See e.g., \cite{Fink2016Noninvasive} and \cite{Masood2013Computer} for an overview. 
-Training relies on an available database of lesions and their diagnoses. 
+Training relies on an available database of labelled lesion images. 
 
 Research and development of computer systems for melanoma detection have increased in the past few decades, following the development of digital cameras and attachable dermoscopes. 
 An overview can be found in \cite{Korotkov2012Computerized}. 
 Despite the effort made in developing new systems, their use in clinical practice is not widespread. 
-An explanation may be the lack of convincing reports on the systems' diagnostic accuracy, owing to small data sets and non-comparable performance. 
+An explanation may be the lack of convincing reports on the systems' diagnostic accuracy, owing to small data sets and non-comparable results. 
 
 Small data sets result in training and testing on the same data, often by incorrect use of cross-validation. 
 This gives overly optimistic estimates of the test error \citep{Smialowski2010Pitfalls,Hastie2009Elements}, and the classification accuracy of the system drops dramatically when tested on an independent test set. 
@@ -76,13 +76,17 @@ Only three studies that we know of have more than $50$ melanomas in an independe
 The diagnostic difficulty of the data set has a significant impact on the reported diagnostic accuracy of the system, as discussed in \cite{Rosado2003Accuracy}, and illustrated in \cite{Malvehy2014Clinical} and \cite{Mollersen2015Computeraided}. 
 The diagnostic difficulty of a data set depends on factors such as proportion of melanomas, exclusion of non-melanocytic lesions, median Breslow depth, etc. 
 Therefore, different systems cannot be compared unless they are tested on the same data set. 
+Very few studies have been conducted where several systems are tested on the same set of lesions, with the exception of \cite{Perrinaud2007Can} and \cite{Mollersen2015Computeraided}. 
 
-A sufficiently large, publicly available data set make independent testing and comparison of diagnostic accuracy between systems possible. 
+A sufficiently large, publicly available data set makes independent testing and comparison of diagnostic accuracy between systems possible. 
 In 2013, the PH$^2$ data set was made publicly available \citep{Mendonca2013PH2}, and added important value to the research on computer systems for melanoma detection. 
 Consisting of only $200$ images, it does not overcome the aforementioned obstacles of small data sets. 
 A larger data set, the ISIC Data Archive (see Section~\ref{sec:Challenge}) is now publicly available. 
 In 2016, an open challenge using images from the ISIC Data Archive was announced. 
 Nevus Doctor, a computer system developed previously by the authors, was used to participate in this challenge.
+The design of the challenge allows for a direct comparison of diagnostic accuracy among the submitted melanoma detection systems, since they have all been tested on the same independent test set. 
+A measure of diagnostic accuracy must be decided upon for ranking of systems. 
+Choice of measure is not trivial as different measures penalises misclassifications differently, and it can have huge impact on the ranking. 
 
 The rest of the article is organised as follows: % a brief description of both the data set and the challenge is given in Section~\ref{sec:Challenge}. A description of Nevus Doctor and the modifications for the challenge is also given in this section. Section~\ref{sec:Results} presents the results of Nevus Doctor compared to the highest ranked participants. In Section~\ref{sec:Discussion}, a discussion on the different aspects of the challenge is provided. The section concludes with some suggestions for future work on Nevus Doctor and possible modifications for future challenges. 
 
@@ -123,11 +127,14 @@ The feature and classifier selection resulted in $16$ features and the QDA class
 Description of each feature can be found in \cite{Mollersen2015Improved} and in \cite{Zortea2014Performance} (feature f1, f5, f6, f10, f11, f12, f16, f17, f18, f54, f55, f56, f57, and f58), and in  \cite{Mollersen2015Divergencebased} (feature f60 and f62).
 
 To provide a posterior probability for each lesion, the prior probability in a discriminant analysis classifier is fixed. 
-We have recalculated the high-sensitivity measures by adjusting the prior probability to avoid the situation where several lesions have the saturated posterior probability of $1.00$. 
+For this paper, we have recalculated the high-sensitivity measures by adjusting the prior probability to avoid the situation where several lesions have the saturated posterior probability of $1.00$. 
 
 \section{Results} \label{sec:Results}
 
-The challenge's ranking criterion was average precision, but scores for the other performance measures were provided as well.  
+The participants were ranked according to diagnostic accuracy of the test set. 
+Other aspects such as computation time were not considered.
+The challenge's ranking criterion was average precision, but scores for the other performance measures listed in Section~\ref{sec:Challenge} were provided as well.  
+This made it possible to rank the participants according to several criteria, not only the one chosen by the challenge. 
 Average precision and AUC of ROC are global performance measures, from $0\%$ sensitivity (no melanomas detected), to $100\%$ sensitivity (all melanomas detected). 
 The high-sensitivity measures provide a performance measures given that a high proportion of the melanomas are detected. 
 
@@ -154,19 +161,20 @@ Participants B and D did not participate in the Manual segmentation part.
 \end{table}
 
 From Table~\ref{tab:Rankings}, it is clear that choice of performance measure has strong impact on the resulting ranking.  
+Participant A, which were ranked highest for both Automatic and Manual segmentation by the challenge, is ranked in the middle for the high-sensitivity measures. 
 
 \subsection{The impact of segmentation}
 
-From Table~\ref{tab:Rankings} we see that the ranking also changes when the participants use their own segmentation algorithm or the semi-automatic/manual segmentation provided by the challenge. 
+From Table~\ref{tab:Rankings} we see that the ranking varies according to whether the participants use their own segmentation algorithm or the semi-automatic/manual segmentation provided by the challenge. 
 Interestingly, the best score for each measure does not improve by semi-automatic/manual segmentation. 
-This could mean that the automatic segmentation algorithms give the same masks as the semi-automatic/manual segmentation. 
+This could mean that the automatic segmentation algorithms give approximately the same masks as the semi-automatic/manual segmentation. 
 Or it could mean that the segmentation mask does not influence the final classification significantly.
 
 The algorithms for the challenge participants were not submitted, and therefore we investigated the impact of segmentation using the Nevus Doctor segmentation algorithm. 
 Figure~\ref{fig:Border} shows an example of the automatic segmentation used in Nevus Doctor and the manual segmentation provided by the challenge. 
 In general, when the difference between the automatic and semi-automatic/manual segmentation was large, the automatic segmentation missed outer lighter areas of the lesion, like in Figure~\ref{fig:Border}. 
 \begin{figure}[h!]
-     \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISIC_0000276_border.jpeg}
+     \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_Results/ISIC_0000276_border.jpeg}
       \caption{Blue line: automatic segmentation. Red line: manual segmentation.}
        \label{fig:Border}
 \end{figure}
@@ -174,7 +182,7 @@ In general, when the difference between the automatic and semi-automatic/manual 
 The occasionally failed segmentation does not seem to have an impact on the classification result.
 Figure~\ref{fig:ROC} shows the ROC curves for automatic and semi-automatic/manual segmentation for Nevus Doctor. 
   \begin{figure}[h!]
-     \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_ROC_qda.jpg}
+     \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_Results/ISBI_ROC_qda.jpg}
       \caption{ROC curves for skin lesion classification with automatic and semi-automatic/manual segmentation.}
        \label{fig:ROC}
    \end{figure}
@@ -225,13 +233,10 @@ We see that the performance varies considerably more between different classifie
 \section{Discussion} \label{sec:Discussion} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The ISIC data repository, consisting of more than $12,000$ dermoscopic images, has answered to a need expressed for several years in the field of computer aided melanoma detection: a publicly available data set. 
-Two important outcome of collecting and sharing data are: 
+Two important outcomes of collecting and sharing data are: 
 (1) Large data sets allow for large training sets and independent test sets. (2) Publicly availability allows for comparison of algorithms on the same data.
-The ISBI challenge has taken advantage of this and set aside and independent test set, and ranked its participants accordingly.
-Very few studies have been conducted where several systems are tested on the same set of lesions, with the exception of \cite{Perrinaud2007Can} and \cite{Mollersen2015Computeraided}. 
-
+The ISBI challenge has taken advantage of this and set aside an independent test set, and ranked its participants according to diagnostic accuracy. 
 However, we see from Table~\ref{tab:Rankings} that the choice of performance measure has great impact on the resulting ranking. 
-A public repository is a big step towards fair comparison between algorithms, but considerable obstacles remain.
 
 In this challenge, the systems were ranked according to average precision, which weights misclassifications equally whether it is a melanoma misclassified as benign, or a benign lesion misclassified as malignant. 
 In two large clinical studies, the specificity at $97\%$ sensitivity \citep{Malvehy2014Clinical} and $98\%$ sensitivity \citep{Monheit2011Performance} was used as performance measures, arguing that a melanoma misclassified as benign can have fatal outcome for the patient. 
@@ -239,55 +244,61 @@ A problem with ranking by very high sensitivity is its dependence on the data se
 In this challenge, $99\%$ sensitivity corresponds to misclassifying only one melanoma, and under such circumstances, the ranking can be somewhat arbitrary. 
 To avoid this, cross-validation, bootstrapping or similar methods can be used.   
 
+From Table~\ref{tab:Rankings}, Table~\ref{tab:ND_Rankings} and Fig.~\ref{fig:ROC} we see that whether automatic or semi-automatic/manual segmentation is used had little impact on the final classification accuracy.
+This imply that further improvement of automatic segmentation algorithms, when compared to semi-automatic/manual segmentation,  will not improve the classification accuracy.
+However, manual segmentation does not necessarily reflect the true borders of the lesion.
+Improvement of automatic segmentation algorithms when tested against classification accuracy could therefore improve the performance of a system. 
+
+In Table~\ref{tab:Diagonal}, fairly similar classifiers, using the same set of features, give more variation in the classification accuracy than change in segmentation method. 
+Although this does not imply that other systems have the same variation in performance, it is an indication that choice of classifier might have bigger impact than suggested earlier.  
+All four classifiers have similar assumptions regarding the distribution of the feature values. 
+The features were selected specifically for the QDA classifier, but dLDA and dQDA outperformed QDA for the high-sensitivity measures. 
+Choice of classifier can have greater impact than previously assumed {\color{red} Magliogannis (117), Dreiseitl (134), see Korotkov}.
+Separating the impact of the classifier from that the features and feature selection is a difficult task.
+However, with a large pool of features, a large training and validation set, and appropriate feature selection, a comparison of classifiers could be possible. 
+
 An important question when analysing the diagnostic accuracy, whatever performance measure, is its generalisability to other data sets. 
 Ideally, the results should reflect a system's performance under actual clinical conditions. 
+The test set in this challenge was not consecutively collected, and inclusion and exclusion criteria are not stated (e.g. if non-melanoma skin cancers are excluded). Even though the performance in absolute numbers, e.g. specificity at $95\%$ sensitivity, are better for many of the algorithms in this challenge compared to other studies, one cannot draw the conclusion that these algorithms are in general better for that performance measure. 
 
-The major drawback of the ISIC Data Archive is the lack of clinical information about each sub data set and each lesion. 
-Of crucial importance are the inclusion and exclusion criteria for each sub data set (e.g. if non-melanoma skin cancers are excluded), and the Breslow thickness or the invasion level of the melanomas. 
-Even though the performance in absolute numbers, e.g. specificity at $95\%$ sensitivity, are better for many of the algorithms in this challenge compared to other studies, one cannot draw the conclusion that these algorithms are in general better for that performance measure. 
+%The major drawback of the ISIC Data Archive is the lack of clinical information about each sub data set and each lesion. 
+%Of crucial importance are the inclusion and exclusion criteria for each sub data set (e.g. if non-melanoma skin cancers are excluded), and the Breslow thickness or the invasion level of the melanomas. 
+
 Demanding more information can result in fewer deposits to the repository, but to have clinical impact, a minimum of clinical information is essential. 
 See e.g., \citep{Malvehy2007Dermoscopy} for recommendations. 
  
-A computer system for melanoma detection can only provide decision support, not actual diagnosis, as long as not all of the images are correctly classified. 
-The usefulness of a system relies not only on its ability for correct classification but also on the possibility for the user to take advantage of the output. 
+
 
 %See e.g. \citet{Dreiseitl2009Computer}; or compare \citet{Elbaum2001Automatic} to \citet{Monheit2011Performance}; \citet{Bauer2000Digital} to \citet{Piccolo2002Dermoscopic}; \citet{Hoffmann2003Diagnostic} to \citet{Barzegari2005Computeraided} and \citet{Boldrick2007Evaluation}; and \citet{Blum2004Value} to \citet{Fruhauf2012Patient} and \citet{FueyoCasado2009Evaluation}. These are studies that report sensitivity and specificity scores first by training and testing on the same data, and later on independent test sets. 
 
 A benefit of a public repository is variability in the data. 
-The data set used in this challenge consists of images taken with different cameras and dermoscopes and from different sources. This introduces some obstacles because the size and colour of a lesion have diagnostic importance. 
+The ISIC Data Archive consists of images taken with different cameras and dermoscopes and from different sources. 
+This introduces some obstacles because the size and colour of a lesion have diagnostic importance, but are not consistent between different cameras and dermoscopes. 
+However, testing a system on images from different cameras and dermoscopes is more realistic than using images from identical equipment. 
+The more specific the requirements of the input are, the less versatile the computer system will be, and probably it will be less used. 
+Additionally, camera and dermoscope technologies are developing fast, and a system must have the ability to easily adapt to new equipment, without an extensive training set. 
 Different image resolutions, magnifications and distances to the skin result in the true size of the lesion differing from image to image, though this can be solved easily by providing information regarding pixels per mm. 
 Additional aspects that pose a challenge are the different colour calibrations of the cameras and different light sources, as illustrated in Fig.~\ref{fig:Colour}. 
   \begin{figure}[h!]
   \centering
-     \subfigure{\includegraphics[width = 0.32 \textwidth]{/Volumes/kam025/Documents/Figures/ISIC_0000023.jpg}}
-     \subfigure{\includegraphics[width = 0.32 \textwidth]{/Volumes/kam025/Documents/Figures/ISIC_0000037.jpg}}
+     \subfigure{\includegraphics[width = 0.32 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_Results/ISIC_0000023.jpg}}
+     \subfigure{\includegraphics[width = 0.32 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_Results/ISIC_0000037.jpg}}
         \caption{Example of different colour calibration and/or different light source from the ISIC Data Archive.}
         \label{fig:Colour}
    \end{figure}
 Colour is one of the main clinical features for melanoma detection \citep{Argenziano2003Dermoscopy}, and computer systems normally have one or more colour features \citep{Korotkov2012Computerized}. 
 There have been attempts at automatic colour calibration based on image content \citep{Iyatomi2011Automated}, but the impact on classification is not known. 
 
-Testing a system on images from different cameras and dermoscopes is perhaps more realistic than using images from identical equipment. 
-The more specific the requirements of the input are, the less versatile the computer system will be, and probably it will be less used. 
-Additionally, camera and dermoscope technologies are developing fast, and a system must have the ability to easily adapt to new equipment, without an extensive training set. 
-In a public repository, information on camera model and type of dermoscope can add quality to the data set.   
+% In a public repository, information on camera model and type of dermoscope can add quality to the data set.   
 
-From Table~\ref{tab:Rankings}, Table~\ref{tab:ND_Rankings} and Fig.~\ref{fig:ROC} we see that whether automatic or semi-automatic/manual segmentation is used has little impact on the final classification accuracy.
-This imply that further improvement of automatic segmentation algorithms, when compared to semi-automatic/manual segmentation,  will not improve the classification accuracy.
-However, manual segmentation does not necessarily reflect the true borders of the lesion.
-Improvement of automatic segmentation algorithms when tested against classification accuracy could therefore improve the performance of a system. 
-
-In Table~\ref{tab:Diagonal}, fairly similar classifiers, using the same set of features, give more variation in the classification accuracy than change in segmentation method. 
-All four classes have similar assumptions regarding the distribution of the feature values. 
-The features were selected specifically for the QDA classifier, but dLDA and dQDA outperform QDA for the high-sensitivity measures. 
-Choice of classifier can have greater impact than previously assumed {\color{red} Magliogannis (117), Dreiseitl (134), see Korotkov}.
-Separating the classifier from the features and feature selection is difficult task.
-However, with a large pool of features, a large training and validation set, and appropriate feature selection, a comparison of classifiers could be possible. 
+A computer system for melanoma detection can only provide decision support, not actual diagnosis, as long as not all of the images are correctly classified. 
+The usefulness of a system relies not only on its ability for correct classification but also on the possibility for the user to take advantage of the output. 
 
 Nevus Doctor is a classical melanoma detection system in the sense that it follows the three main steps of segmentation, feature extraction and classification, which correspond to the three sub challenges.  
 For the recent years, deep convolutional neural networks (CNN) have entered the field of image classification with great success, and has also been applied to melanoma detection \cite{Esteva2017Dermatologistlevel}. 
-In the study of Esteva, CNN is comparable to dermatologists performance, which is the same as reported on classical melanoma detection systems.
+In the study of Esteva, CNN's performance was comparable to that of dermatologistse, which is the same as reported for classical melanoma detection systems.
 A direct comparison between methods can give an answer to whether one set of methods outperforms the other. 
+The ISBI 2017 melanoma detection challenge has added an additional requirement of submitting a description of the algorithms used, and a comparison between methods can be done once the results are published. 
 
 \subsection{Conclusion}
 
@@ -298,16 +309,13 @@ A high-sensitivity measure can therefore improve the clinical relevance of the c
 The exact sensitivity score will be subject to discussion, even among dermatologists. 
 A system with $95\%$ sensitivity misclassifies one in 20 melanomas, and it is difficult to imagine that lower sensitivity is acceptable. 
 To truly know whether a system can have clinical impact, it must be tested in a clinical setting, which is not feasible in an open challenge. 
-However, an open challenge together with a large, publicly available data set, adds important value to research on melanoma detection.
 
-Semi-automatic/manual segmentation did not improve the classification accuracy compared with automatic segmentation for the six top ranked participants and for Nevus Doctor. 
-Further improvement in segmentation should therefore use another measure of success than resemblance to manual segmentation, perhaps its impact on the final classification.
 
-Choice of classifier had greater impact than choice of segmentation method for the Nevus Doctor system. 
-Although this does not imply that other systems have the same variation in performance, it is an indication that choice of classifier might have bigger impact than suggested earlier.  
+%Semi-automatic/manual segmentation did not improve the classification accuracy compared with automatic segmentation for the six top ranked participants and for Nevus Doctor. 
+%Further improvement in segmentation should therefore use another measure of success than resemblance to manual segmentation, perhaps its impact on the final classification.
 
 The classical melanoma detection systems, where segmentation, feature extraction and classification are performed as separate tasks, might get competition from CNN systems in the near future.
-As long as a system's diagnostic accuracy is significantly lower than $100\%$ it can only be used as decision support, not for actual diagnosis, and output other than the class label can be of great value to the clinician. 
+As long as a system is used as decision support, not for actual diagnosis, output other than the class label can be of great value to the clinician. 
 In that perspective, classical systems with their hand-crafted features and simple classification algorithms have a benefit over the CNN systems. 
 
 
