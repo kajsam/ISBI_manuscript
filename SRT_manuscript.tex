@@ -28,7 +28,7 @@
 \author[4]{H. Kirchesch}
 \author[2]{F. Godtliebsen}
 
-\affil[1]{ Department of Community Medicine, UiT The Arctic University of Norway, Troms{\o}, Norway}
+\affil[1]{Department of Community Medicine, UiT The Arctic University of Norway, Troms{\o}, Norway}
 \affil[2]{Department of Mathematics and Statistics, UiT The Arctic University of Norway, Troms{\o}, Norway}
 \affil[3]{Norwegian Centre for E-health Research, University Hospital of North Norway, Troms{\o}, Norway}
 \affil[4]{Private office, Venloer Stra{\ss}e 107, 50259 Pulheim, Germany}
@@ -67,7 +67,7 @@ Systems that were ranked among the top three for one measure, dropped to the bot
 From a clinical perspective, the misclassification of a melanoma as benign has far greater cost than the misclassification of a benign lesion as malignant. 
 For a computer system to have clinical impact, its performance should be measured in a clinical relevant way. 
 
-The small impact of segmentation method on diagnostic accuracy either suggests that the automatic segmentation algorithms do not need improvement, or that improvement should measured against diagnostic accuracy rather than resemblance to manual segmentation. 
+The small impact of segmentation method on diagnostic accuracy either suggests that the automatic segmentation algorithms do not need improvement, or that improvement should be measured against diagnostic accuracy rather than resemblance to manual segmentation. 
 The variability in diagnostic accuracy for different classifier algorithms was larger than the variability for segmentation methods, and suggests a focus for future investigations. 
 
 
@@ -100,12 +100,13 @@ An explanation may be the lack of convincing reports on the systems' diagnostic 
 Small data sets result in training and testing on the same data, often by incorrect use of cross-validation. 
 This gives overly optimistic estimates of the test error \citep{Smialowski2010Pitfalls,Hastie2009Elements}, and the classification accuracy of the system drops dramatically when tested on an independent test set. 
 In the studies that report independent testing, the test set is often too small for the results to be generalised. 
-Only three studies that we know of have more than $50$ melanomas in an independent test set \citep{Monheit2011Performance, Malvehy2014Clinical, Esteva2017Dermatologistlevel}. 
+In addition, consecutively collection of images is crucial for a clinical-like dataset. 
+Only two studies that we know of have more than $50$ melanomas in an independent test set of consecutively collected images \citep{Monheit2011Performance, Malvehy2014Clinical}. 
 
-The diagnostic difficulty of the data set has a significant impact on the reported diagnostic accuracy of the system, as discussed in \cite{Rosado2003Accuracy}, and illustrated in \cite{Malvehy2014Clinical} and \cite{Mollersen2015Computeraided}. 
+The diagnostic difficulty of the data set has significant impact on the reported diagnostic accuracy of the system, as discussed in \cite{Rosado2003Accuracy}, and illustrated in \cite{Malvehy2014Clinical} and \cite{Mollersen2015Computeraided}. 
 The diagnostic difficulty of a data set depends on factors such as proportion of melanomas, exclusion of non-melanocytic lesions, median Breslow depth, etc. 
 Therefore, different systems cannot be compared unless they are tested on the same data set. 
-Very few studies have been conducted where several systems are tested on the same set of lesions, with the exception of \cite{Perrinaud2007Can} and \cite{Mollersen2015Computeraided}. 
+There are few studies where several systems are tested on the same set of lesions, with the exception of \cite{Perrinaud2007Can} and \cite{Mollersen2015Computeraided}. 
 
 A sufficiently large, publicly available data set makes independent testing and comparison of diagnostic accuracy between systems possible. 
 In 2013, the PH$^2$ data set was made publicly available \citep{Mendonca2013PH2}, and added important value to the research on computer systems for melanoma detection. 
@@ -114,7 +115,8 @@ A larger data set, the ISIC Data Archive (see Section~\ref{sec:Challenge}) is no
 In 2016, an open challenge using images from the ISIC Data Archive was announced. 
 Nevus Doctor, a computer system developed previously by the authors, was used to participate in this challenge.
 The design of the challenge allows for a direct comparison of diagnostic accuracy among the submitted melanoma detection systems, since they have all been tested on the same independent test set. 
-A measure of diagnostic accuracy must be decided upon for ranking of systems. 
+Even when systems are tested on the same test set, the question on how to measure the diagnostic accuracy arises. 
+Summarising the performance of a system for the whole range of sensitivity and specificity values gives a different perspective than measuring the performance only for very high sensitivity values. 
 Choice of measure is not trivial as different measures penalises misclassifications differently, and it can have huge impact on the ranking. 
 
 The rest of the article is organised as follows: Section~\ref{sec:Challenge} describes the data, the challenge and the five performance measures. In addition, a brief description of Nevus Doctor is given. In Section~\ref{sec:Results}, the variations in ranking of the top systems are presented. An investigation into segmentation method and classifier algorithm is also found here. A discussion of the results is provided in Section~\ref{sec:Discussion}, together with some concluding remarks. 
@@ -200,8 +202,8 @@ Interestingly, the best score for each measure does not improve by semi-automati
 This could mean that the automatic segmentation algorithms give approximately the same masks as the semi-automatic/manual segmentation, or it could mean that the segmentation mask does not influence the final classification significantly.
 
 The algorithms for the challenge participants were not submitted, and therefore we investigated the impact of segmentation using the Nevus Doctor segmentation algorithm. 
-Figure~\ref{fig:Border} shows an example of the automatic segmentation used in Nevus Doctor and the manual segmentation provided by the challenge. 
-In general, when the difference between the automatic and semi-automatic/manual segmentation was large, the automatic segmentation missed outer lighter areas of the lesion, like in Figure~\ref{fig:Border}. 
+Fig.~\ref{fig:Border} shows an example of the automatic segmentation used in Nevus Doctor and the manual segmentation provided by the challenge. 
+In general, when the difference between the automatic and semi-automatic/manual segmentation was large, the automatic segmentation missed outer lighter areas of the lesion, like in Fig.~\ref{fig:Border}. 
 \begin{figure}[h!]
      \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_Results/ISIC_0000276_border.jpeg}
       \caption{Blue line: automatic segmentation. Red line: manual segmentation.}
@@ -209,7 +211,7 @@ In general, when the difference between the automatic and semi-automatic/manual 
 \end{figure}
 
 The occasionally failed segmentation does not seem to have an impact on the classification result.
-Figure~\ref{fig:ROC} shows the ROC curves for automatic and semi-automatic/manual segmentation for Nevus Doctor. 
+Fig.~\ref{fig:ROC} shows the ROC curves for automatic and semi-automatic/manual segmentation for Nevus Doctor. 
   \begin{figure}[h!]
      \includegraphics[width = 0.85 \textwidth]{/Volumes/kam025/Documents/Figures/ISBI_Results/ISBI_ROC_qda.jpg}
       \caption{ROC curves for skin lesion classification with automatic and semi-automatic/manual segmentation.}
